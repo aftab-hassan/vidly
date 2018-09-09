@@ -67,34 +67,28 @@ class Movies extends Component {
     //     this.state.sortColumn.path = path;
     //     this.state.sortColumn.order = 'asc'
     //   }
-        console.log('printing sortColumn')
-        console.log(sortColumn)
+        // console.log('printing sortColumn')
+        // console.log(sortColumn)
       this.setState({sortColumn : sortColumn})
   }
 
   render() {
-    const paginatedMovies = paginate(
-      this.state.movies,
-      this.state.currentPage,
-      this.state.pageSize
-    );
-
     const filteredMovies =
       this.state.currentGenre && this.state.currentGenre.name != "All Genres"
         ? this.state.movies.filter(
             movie => this.state.currentGenre.name === movie.genre.name
           )
         : this.state.movies;
-    console.log(filteredMovies);
+    // console.log(filteredMovies);
 
     const sortedFilteredMovies = _.orderBy(filteredMovies, this.state.sortColumn.path, this.state.sortColumn.order)
 
-    const filteredMoviesPaginated = paginate(
+    const paginatedSortedFilteredMovies = paginate(
         sortedFilteredMovies,
       this.state.currentPage,
       this.state.pageSize
     );
-    console.log(filteredMoviesPaginated);
+    // console.log(filteredMoviesPaginated);
 
     const { length: count } = filteredMovies;
     // console.log(this.state.genres);
@@ -113,10 +107,10 @@ class Movies extends Component {
         <div className="col">
           <p>There are {count} movies in the database!</p>
           <MoviesTable
-            filteredMoviesPaginated={filteredMoviesPaginated}
+            filteredMoviesPaginated={paginatedSortedFilteredMovies}
             movies={this.state.movies}
             onDeleteEvent={this.handleDeleteMovie}
-            onLikEvent={this.handleLike}
+            onLikeEvent={this.handleLike}
             onSortEvent={this.handleSort}
             sortColumn={this.state.sortColumn}
           />
