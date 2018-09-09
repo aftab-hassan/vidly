@@ -72,28 +72,34 @@ class Movies extends Component {
       this.setState({sortColumn : sortColumn})
   }
 
-  render() {
+  getPagedData = () => {
     const filteredMovies =
-      this.state.currentGenre && this.state.currentGenre.name != "All Genres"
-        ? this.state.movies.filter(
-            movie => this.state.currentGenre.name === movie.genre.name
-          )
-        : this.state.movies;
-    // console.log(filteredMovies);
+    this.state.currentGenre && this.state.currentGenre.name != "All Genres"
+      ? this.state.movies.filter(
+          movie => this.state.currentGenre.name === movie.genre.name
+        )
+      : this.state.movies;
+  // console.log(filteredMovies);
 
     const sortedFilteredMovies = _.orderBy(filteredMovies, this.state.sortColumn.path, this.state.sortColumn.order)
 
     const paginatedSortedFilteredMovies = paginate(
         sortedFilteredMovies,
-      this.state.currentPage,
-      this.state.pageSize
+        this.state.currentPage,
+        this.state.pageSize
     );
     // console.log(filteredMoviesPaginated);
 
-    const { length: count } = filteredMovies;
+    return {totalCount:filteredMovies.length, paginatedSortedFilteredMovies:paginatedSortedFilteredMovies}
+  }
+
+  render() {
+    const { length: count } = this.state.movies;
     // console.log(this.state.genres);
 
     if (count === 0) return <p>There are no movies in the database!</p>;
+
+    const {totalCount, paginatedSortedFilteredMovies } = this.getPagedData();
 
     return (
       <div className="row">
@@ -105,7 +111,7 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <p>There are {count} movies in the database!</p>
+          <p>There are {totalCount} movies in the database!</p>
           <MoviesTable
             filteredMoviesPaginated={paginatedSortedFilteredMovies}
             movies={this.state.movies}
@@ -117,7 +123,7 @@ class Movies extends Component {
           <Pagination
             currentPage={this.state.currentPage}
             pageSize={this.state.pageSize}
-            itemsCount={filteredMovies.length}
+            itemsCount={totalCount}
             onPageChange={this.handlePageChange}
           />
         </div>
