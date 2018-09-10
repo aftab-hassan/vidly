@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'font-awesome/css/font-awesome.css'
 import Movies from './components/movies'
+import {BrowserRouter} from 'react-router-dom'
 
-ReactDOM.render(<Movies />, document.getElementById('root'));
+ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();
